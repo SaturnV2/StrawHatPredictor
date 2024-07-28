@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Straw Hat Model Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('static/images/crew.png'); /* Añadir la ruta a tu imagen de fondo */
+            background-size: cover;
+            background-attachment: fixed;
+            color: #343a40;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #007bff;
+        }
+        form {
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con opacidad */
+            max-width: 400px;
+        }
+        input[type="file"] {
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        .character-image {
+            max-width: 300px;
+            margin: 20px auto;
+            border: 5px solid white; /* Marco blanco */
+            opacity: 0.9; /* Nivel de opacidad */
+        }
+        .character-description {
+            margin-top: 10px;
+            font-size: 18px;
+            background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco con opacidad */
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upload an Image</h1>
+    <form action="/predict" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" accept="image/*">
+        <input type="submit" value="Predict">
+    </form>
+    <div id="result">
+        <img id="character-image" class="character-image" src="" alt="">
+        <h2 id="prediction"></h2>
+        <p id="description" class="character-description"></p>
+    </div>
+    <script>
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await response.json();
+            document.getElementById('prediction').innerText = `Prediction: ${result.prediction}`;
+            document.getElementById('character-image').src = result.image_url;
+            document.getElementById('description').innerText = result.description;
+        });
+    </script>
+</body>
+</html>
+
+
+
